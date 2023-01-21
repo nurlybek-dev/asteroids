@@ -22,15 +22,20 @@ UNAME_S := $(shell uname -s)
 CXXFLAGS = -std=c++17 -Iinclude
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
+EXE = 
+RM_CMD = 
+
 ##---------------------------------------------------------------------
 ## BUILD FLAGS PER PLATFORM
 ##---------------------------------------------------------------------
 
 ifeq ($(UNAME_S), Linux) #LINUX
 	ECHO_MESSAGE = "Linux"
-	LIBS += -lGL -ldl `sdl2-config --libs`
+	LIBS += -lGL -ldl -lSDL2 -lSDL2_ttf -lSDL2_image -lSDL2_mixer
 
-	CXXFLAGS += `sdl2-config --cflags`
+	CXXFLAGS += -I/usr/include/
+	EXE = game
+	RM_CMD = rm
 	CFLAGS = $(CXXFLAGS)
 endif
 
@@ -50,6 +55,8 @@ ifeq ($(OS), Windows_NT)
 
 	CXXFLAGS += -IC:/msys64/mingw64/include/SDL2 -Dmain=SDL_main
 	CFLAGS = $(CXXFLAGS)
+	EXE = game.exe
+	RM_CMD = del
 endif
 
 ##---------------------------------------------------------------------
@@ -74,4 +81,4 @@ $(EXE): $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
 
 clean:
-	del game.exe $(OBJS)
+	$(RM_CMD) $(EXE) $(OBJS)
